@@ -12,5 +12,6 @@
   <body>
     {% include 'navbar.html' %}
     <h1>Database Connection Status: {{ db_status }}</h1>
+    <p>Loaded SQL files: {{ loaded_files|join(", ") }}</p>
   </body>
 </html>
