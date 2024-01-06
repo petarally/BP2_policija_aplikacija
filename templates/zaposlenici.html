@@ -22,42 +22,6 @@
         {% endfor %}
       </ul>
     </div>
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <title>Zaposlenici</title>
-        <link
-          rel="stylesheet"
-          href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-        />
-        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-      </head>
-      <body>
-        <div class="container-lg py-3">
-          <h1>Zaposlenici</h1>
-          <table class="table table-striped table-hover">
-            <thead>
-              <tr>
-                <th>Column 1</th>
-                <th>Column 2</th>
-                <th>Column 3</th>
-                <!-- Add more columns as needed -->
-              </tr>
-            </thead>
-            <tbody>
-              {% for zaposlenik in zaposlenici %}
-              <tr>
-                <td>{{ zaposlenik[0] }}</td>
-                <td>{{ zaposlenik[1] }}</td>
-                <td>{{ zaposlenik[2] }}</td>
-                <!-- Add more data cells as needed -->
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-      </body>
     </html>
   </body>
 </html>
