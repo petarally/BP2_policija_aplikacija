@@ -21,7 +21,7 @@ def init_db():
         db = mysql.connection
         cursor = db.cursor()
 
-        sql_files = ['policija.sql', 'podatci.sql', 'funkcije.sql']  # Add your SQL file names here
+        sql_files = ['policija.sql', 'podatci.sql', 'upiti.sql', 'pogledi.sql']  # Add your SQL file names here
         loaded_files = []
 
         for file in sql_files:
