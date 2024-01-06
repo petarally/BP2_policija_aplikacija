@@ -124,7 +124,7 @@ CREATE TABLE Pas
     id INT PRIMARY KEY,
     id_trener INT,
     oznaka VARCHAR(255) UNIQUE,
-    dob INT NOT NULL,
+    dob DATE NOT NULL,
     status VARCHAR(255),
     id_kaznjivo_djelo INT,
     FOREIGN KEY (id_trener) REFERENCES Zaposlenik(id),
@@ -2391,16 +2391,16 @@ INSERT INTO Kaznjiva_djela(naziv, opis, predvidena_kazna, predvidena_novcana_kaz
 ('Nedozvoljeno snimanje ili prisluškivanje', 'Neovlašteno bilježenje razgovora ili prisluškivanje komunikacija bez pristanka svih uključenih strana.', NULL, 750.00); 
  
  -- Tablica Pas(11)(svaki cin osim voditelja moze biti trener)
- INSERT INTO Pas(id_trener, oznaka, dob, status, id_kaznjivo_djelo) VALUES
- (1, 'K9-123', 2, 'aktivan', 1),
- (2, 'K9-456', 4, 'nije za teren', 1),
- (5, 'K9-789', 10, 'umirovljen', 1),
- (6, 'K9-987', 2, 'aktivan', 1),
- (7, 'K9-654', 3, 'aktivan', 15),
- (8, 'K9-321', 5, 'aktivan', 15),
- (9, 'K9-111', 1, 'aktivan', 15),
- (11, 'K9-454', 3, 'aktivan', 11),
- (13, 'K9-999', 9, 'umirovljen', 11);
+INSERT INTO Pas(id_trener, oznaka, dob, status, id_kaznjivo_djelo) VALUES
+(1, 'K9-123', '2019-03-05', 'aktivan', 1),
+(2, 'K9-456', '2017-04-08', 'nije za teren', 1),
+(5, 'K9-789', '2011-03-05', 'umirovljen', 1),
+(6, 'K9-987', '2019-01-11', 'aktivan', 1),
+(7, 'K9-654', '2018-02-10', 'aktivan', 15),
+(8, 'K9-321', '2016-11-01', 'aktivan', 15),
+(9, 'K9-111', '2020-04-08', 'aktivan', 15),
+(11, 'K9-454', '2018-12-12', 'aktivan', 11),
+(13, 'K9-999', '2012-10-01', 'umirovljen', 11);
  
  -- Tablica Slucaj
  -- Tablica evidencija događaja
