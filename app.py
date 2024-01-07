@@ -35,7 +35,6 @@ def init_db():
         db.commit()
     return loaded_files
 
-
 @app.route('/')
 def index():
     db_status = "No"
