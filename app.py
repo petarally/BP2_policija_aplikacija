@@ -20,24 +20,19 @@ def init_db():
     with app.app_context():
         db = mysql.connection
         cursor = db.cursor()
-
-        sql_files = ['policija.sql', 'podatci.sql', 'upiti.sql', 'pogledi.sql']  # Add your SQL file names here
+        sql_files = ['policija.sql', 'podatci.sql', 'upiti.sql', 'pogledi.sql']
         loaded_files = []
-
         for file in sql_files:
             try:
                 with app.open_resource(os.path.join('database', file)) as f:
                     sql_commands = f.read().decode('utf8').split(';')
                     for command in sql_commands:
-                        # skip empty commands
                         if command.strip() != '':
                             cursor.execute(command)
                 loaded_files.append(file)
             except Exception as e:
                 print(f"Failed to load {file}: {e}")
-
         db.commit()
-
     return loaded_files
 
 
@@ -51,9 +46,29 @@ def index():
         cur.close()
         db_status = "Yes"
         loaded_files = init_db()
+        print(db_status)
+        print(loaded_files)    
+        db = mysql.connection
+        cursor = db.cursor()
+        query = """
+        SELECT Z.id AS id_zaposlenika, O.ime_prezime AS ime_prezime_zaposlenika, COUNT(S.id) AS broj_slucajeva
+        FROM Zaposlenik Z
+        JOIN Osoba O ON Z.id_osoba= O.id
+        LEFT JOIN Slucaj S ON S.id_voditelj = Z.id
+        GROUP BY Z.id, o.ime_prezime
+        HAVING COUNT(S.id) =
+        (SELECT MAX(broj_slucajeva)
+            FROM (
+            SELECT COUNT(id) AS broj_slucajeva
+            FROM Slucaj 
+            GROUP BY id_voditelj
+        ) AS max_voditelj)
+        """
+        cursor.execute(query)
+        result = cursor.fetchall()
     except OperationalError:
         print("Failed to connect to the database")
-    return render_template('index.html', db_status=db_status, loaded_files=loaded_files)
+    return render_template('index.html', result=result)
 
 @app.route('/slucajevi')
 def cases():
@@ -61,7 +76,7 @@ def cases():
     cur.execute("SELECT * FROM Slucaj")
     cases = cur.fetchall()
     cur.close()
-    return render_template('cases.html', cases=cases)
+    return render_template('slucajevi.html', cases=cases)
 
 
 @app.route('/vozila')
@@ -74,7 +89,7 @@ def vehicles():
     """)
     vehicles = cur.fetchall()
     cur.close()
-    return render_template('vehicles.html', vehicles=vehicles)
+    return render_template('vozila.html', vehicles=vehicles)
 
 @app.route('/zaposlenici')
 def zaposlenici():
@@ -92,6 +107,19 @@ def zaposlenici_podrucje(podrucje_uprave):
     cur.close()
     return render_template('zaposlenici_podrucje.html', zaposlenici=zaposlenici)
 
+@app.route('/odjeli')
+def odjeli():
+    cur = mysql.connection.cursor()
+    query = """
+        SELECT O.naziv AS naziv_odjela, COUNT(Z.id) AS broj_zaposlenika
+        FROM Zaposlenik Z
+        JOIN Odjeli O ON Z.id_odjel = O.id
+        GROUP BY O.id, O.naziv
+    """
+    cur.execute(query)
+    result = cur.fetchall()
+    cur.close()
+    return render_template('odjeli.html', result=result)
 
 if __name__ == '__main__':
     app.run(debug=True, port=8000)

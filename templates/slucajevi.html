@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Slučajevi</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </head>
+  <body>
+    {% include 'navbar.html' %}
+    <div class="container py-3">
+      <h1>Svi slučajevi</h1>
+      {% if cases %}
+      <div class="row">
+        {% for case in cases %}
+        <div class="col-12">
+          <div class="card mb-3">
+            <div class="card-body">
+              <h5 class="card-title">{{ case[1] }}</h5>
+              <p class="card-text">Opis: {{ case[2] }}</p>
+              <p class="card-text">
+                <small class="text-muted"
+                  >Prijavljeno: {{ case[3].strftime('%d.%m.%Y') if case[3] else
+                  'N/A' }}</small
+                >
+              </p>
+              <p class="card-text">
+                <small class="text-muted"
+                  >Završeno: {{ case[4].strftime('%d.%m.%Y') if case[4] else
+                  'N/A' }}</small
+                >
+              </p>
+              <p class="card-text">Status: {{ case[5] }}</p>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="alert alert-info" role="alert">No cases to display.</div>
+      {% endif %}
+    </div>
+  </body>
+</html>

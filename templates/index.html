@@ -11,7 +11,36 @@
   </head>
   <body>
     {% include 'navbar.html' %}
-    <h1>Database Connection Status: {{ db_status }}</h1>
-    <p>Loaded SQL files: {{ loaded_files|join(", ") }}</p>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-3">
+          <h2>Pohvale vrijednim zaposlenicima</h2>
+          {% if result %}
+          <div class="row">
+            {% for row in result %}
+            <div class="col-12">
+              <div class="card mb-3">
+                <div class="card-body">
+                  <h5 class="card-title">{{ row[1] }}</h5>
+                  <p class="card-text">
+                    Riješeni slučajevi: <strong>{{ row[2] }}</strong>
+                  </p>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+          {% else %}
+          <div class="alert alert-info" role="alert">No data to display.</div>
+          {% endif %}
+        </div>
+        <div class="col-md-6">
+          <!-- Content for the middle 2/4th of the screen goes here -->
+        </div>
+        <div class="col-md-3">
+          <!-- Content for the right 1/4th of the screen goes here -->
+        </div>
+      </div>
+    </div>
   </body>
 </html>
