@@ -81,12 +81,27 @@ def cases():
 
 @app.route('/vozila')
 def vehicles():
-    cur = mysql.connection.cursor()
-    cur.execute("""
+    ime_prezime = request.args.get('ime_prezime', default="%", type=str)
+    registracija = request.args.get('registracija', default="%", type=str)
+
+    query = """
         SELECT Osoba.ime_prezime, Vozilo.*
         FROM Vozilo
         JOIN Osoba ON Vozilo.id_vlasnik = Osoba.id
-    """)
+        WHERE 1
+    """
+    params = []
+
+    if ime_prezime != "":
+        query += " AND Osoba.ime_prezime LIKE %s"
+        params.append(ime_prezime)
+
+    if registracija != "":
+        query += " AND Vozilo.registracija LIKE %s"
+        params.append(registracija)
+
+    cur = mysql.connection.cursor()
+    cur.execute(query, params)
     vehicles = cur.fetchall()
     cur.close()
     return render_template('vozila.html', vehicles=vehicles)

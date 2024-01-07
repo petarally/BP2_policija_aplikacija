@@ -13,6 +13,38 @@
     {% include 'navbar.html' %}
     <div class="container">
       <h1>Automobili</h1>
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-lg-6">
+            <form method="GET" action="/vozila">
+              <div class="form-group">
+                <label for="ime_prezime">Ime i prezime:</label>
+                <input
+                  type="text"
+                  class="form-control form-control-sm"
+                  id="ime_prezime"
+                  name="ime_prezime"
+                />
+              </div>
+              <div class="form-group">
+                <label for="registracija">Registracija:</label>
+                <input
+                  type="text"
+                  class="form-control form-control-sm"
+                  id="registracija"
+                  name="registracija"
+                />
+              </div>
+              <button
+                type="submit"
+                class="btn btn-primary btn-sm btn-block float-right"
+              >
+                Filter
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
       <div class="container mt-5">
         <table class="table table-striped table-hover table-bordered">
           <thead class="thead-dark">
@@ -27,7 +59,7 @@
           </thead>
           <tbody>
             {% for vehicle in vehicles %}
-            <tr>
+            <tr class="{{ 'table-danger' if vehicle[4] is none else '' }}">
               <td>{{ vehicle[2] }}</td>
               <td>{{ vehicle[3] }}</td>
               <td>{{ vehicle[4] }}</td>
