@@ -11,42 +11,19 @@ app.config['JSON_AS_ASCII'] = False
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = 'root'
-app.config['MYSQL_DB'] = 'policija_aplikacija'
+app.config['MYSQL_DB'] = 'Policija'
 # app.config["MYSQL_AUTOCOMMIT"] = True ili False ... odaberite po želji i prema tome onda koristite ili ne koristite mysql.connection.commit()
 
 mysql = MySQL(app)
 
-def init_db():
-    with app.app_context():
-        db = mysql.connection
-        cursor = db.cursor()
-        sql_files = ['policija.sql', 'podatci.sql', 'upiti.sql', 'pogledi.sql']
-        loaded_files = []
-        for file in sql_files:
-            try:
-                with app.open_resource(os.path.join('database', file)) as f:
-                    sql_commands = f.read().decode('utf8').split(';')
-                    for command in sql_commands:
-                        if command.strip() != '':
-                            cursor.execute(command)
-                loaded_files.append(file)
-            except Exception as e:
-                print(f"Failed to load {file}: {e}")
-        db.commit()
-    return loaded_files
-
 @app.route('/')
 def index():
     db_status = "No"
-    loaded_files = []
     try:
         cur = mysql.connection.cursor()
         cur.execute("SELECT 1")
         cur.close()
-        db_status = "Yes"
-        loaded_files = init_db()
-        print(db_status)
-        print(loaded_files)    
+        db_status = "Yes"  
         db = mysql.connection
         cursor = db.cursor()
         query = """
@@ -76,6 +53,19 @@ def cases():
     cases = cur.fetchall()
     cur.close()
     return render_template('slucajevi.html', cases=cases)
+
+
+@app.route('/showtables')
+def show_tables():
+    print("About to execute SHOW TABLES")
+    cur = mysql.connection.cursor()
+    cur.execute("SHOW TABLES")
+    cur.execute("SELECT * FROM Slucaj")
+    tables = [table[0] for table in cur.fetchall()]
+    cur.close()
+    print("Executed SHOW TABLES")
+    print(tables)
+    return 'Tables printed in console.'
 
 
 @app.route('/vozila')
