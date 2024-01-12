@@ -3414,3 +3414,19 @@ JOIN zgrada ON zgrada.id = mjesto.id;
 
 
 SELECT * FROM odjeli_podrucje_uprave;
+
+CREATE VIEW zaposlenik_u_zgradi AS
+SELECT zg.id AS zg_id, zg.adresa AS zg_adresa, zg.id_mjesto, zg.vrsta_zgrade, rm.id AS rm_id, rm.vrsta, rm.dodatne_informacije, o.id AS o_id, o.ime_prezime, o.datum_rodenja, o.oib, o.spol, o.adresa, o.telefon, o.email, za.id AS za_id, za.datum_zaposlenja, za.datum_izlaska_iz_sluzbe, za.id_nadređeni, za.id_radno_mjesto, za.id_odjel, za.id_zgrada, za.id_osoba
+FROM zaposlenik za 
+INNER JOIN zgrada zg ON zg.id = za.id_zgrada 
+INNER JOIN osoba o on o.id = za.id_osoba 
+INNER JOIN radno_mjesto rm ON rm.id = za.id_radno_mjesto;
+
+CREATE VIEW prikaz_odjela AS
+SELECT * 
+FROM zaposlenik_u_zgradi zuz 
+INNER JOIN odjeli ON zuz.id_odjel = odjeli.id;
+
+SELECT * 
+FROM prikaz_odjela 
+WHERE zg_id = 36 AND id_odjel = 2;

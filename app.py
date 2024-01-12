@@ -27,9 +27,20 @@ def index():
         cursor = db.cursor()
         cursor.execute("SELECT * FROM Zaposlenici_s_najvise_rijesenih_slucajeva")
         result = cursor.fetchall()
+        cursor.close()
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT * FROM Slucajevi_u_posljednjih_n_dana")
+        svjezi_slucajevi = cur.fetchall()
+        cur.close()
+        cur = mysql.connection.cursor()
+        cur.execute('SELECT pregled_pasa.*, pas.status, pas.godina_rodjenja FROM pregled_pasa JOIN pas ON pas.id=pregled_pasa.pas_id')
+        pregled_pasa = cur.fetchall()
+        cur.execute('SELECT * FROM najefikasniji_pas JOIN pas ON pas.id = najefikasniji_pas.pas_id')
+        najefikasniji_pas = cur.fetchall()
+        cur.close()
     except OperationalError:
         print("Failed to connect to the database")
-    return render_template('index.html', result=result)
+    return render_template('index.html', result=result, svjezi_slucajevi=svjezi_slucajevi, najefikasniji_pas=najefikasniji_pas)
 
 @app.route('/slucajevi')
 def cases():
@@ -149,7 +160,6 @@ def odjeli_podrucje(podrucje_uprave):
     cur.execute("SELECT * FROM odjeli_podrucje_uprave WHERE podrucje_id = %s", [podrucje_uprave])
     odjeli = cur.fetchall()
     cur.close()
-    print(odjeli)
     return render_template('odjeli_podrucje.html', odjeli=odjeli)
 
 @app.route('/odjeli')

@@ -33,9 +33,45 @@
           {% else %}
           <div class="alert alert-info" role="alert">No data to display.</div>
           {% endif %}
+          <h2>Nagrađeni pas</h2>
+          {% if result %}
+
+          <div class="row">
+            {% for pas in najefikasniji_pas %}
+            <div class="col-12">
+              <div class="card mb-3">
+                <div class="card-body">
+                  <h5 class="card-title">{{ pas[1] }}</h5>
+                  <p class="card-text">Trener: <strong>{{ pas[2] }}</strong></p>
+                  <p class="card-text">
+                    Riješeni slučajevi: <strong>{{ pas[3] }}</strong>
+                  </p>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+
+          {% else %}
+          <div class="alert alert-info" role="alert">No data to display.</div>
+          {% endif %}
         </div>
+
         <div class="col-md-6">
-          <!-- Content for the middle 2/4th of the screen goes here -->
+          <div class="row">
+            {% for svjezi_slucaj in svjezi_slucajevi %}
+            <div class="col-sm-12">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">{{ svjezi_slucaj[1] }}</h5>
+                  <p class="card-text">Status: {{ svjezi_slucaj[2] }}</p>
+                  <p class="card-text">ID: {{ svjezi_slucaj[3] }}</p>
+                  <p class="card-text">Name: {{ svjezi_slucaj[4] }}</p>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
         </div>
         <div class="col-md-3">
           <!-- Content for the right 1/4th of the screen goes here -->
