@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Policija | Službenici</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </head>
+  <body>
+    {% include 'navbar.html' %}
+    <div class="container">
+      <h1 class="mt-4 mb-4">Službenici</h1>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Zaposlenik ID</th>
+            <th>Ime i prezime</th>
+            <th>Datum rođenja</th>
+            <th>Godine staža</th>
+            <th>Umirovljen</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for sluzbenik in sluzbenici %}
+          <tr>
+            <td>{{ sluzbenik[0] }}</td>
+            <td>{{ sluzbenik[1] }}</td>
+            <td>{{ sluzbenik[2].strftime('%d.%m.%Y') }}</td>
+            <td>{{ sluzbenik[3] }}</td>
+            <td>{{ sluzbenik[4] }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </body>
+</html>

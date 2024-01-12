@@ -26,21 +26,7 @@ def index():
         db_status = "Yes"  
         db = mysql.connection
         cursor = db.cursor()
-        query = """
-        SELECT Z.id AS id_zaposlenika, O.ime_prezime AS ime_prezime_zaposlenika, COUNT(S.id) AS broj_slucajeva
-        FROM Zaposlenik Z
-        JOIN Osoba O ON Z.id_osoba= O.id
-        LEFT JOIN Slucaj S ON S.id_voditelj = Z.id
-        GROUP BY Z.id, o.ime_prezime
-        HAVING COUNT(S.id) =
-        (SELECT MAX(broj_slucajeva)
-            FROM (
-            SELECT COUNT(id) AS broj_slucajeva
-            FROM Slucaj 
-            GROUP BY id_voditelj
-        ) AS max_voditelj)
-        """
-        cursor.execute(query)
+        cursor.execute("SELECT * FROM Zaposlenici_s_najvise_rijesenih_slucajeva")
         result = cursor.fetchall()
     except OperationalError:
         print("Failed to connect to the database")
@@ -54,18 +40,55 @@ def cases():
     cur.close()
     return render_template('slucajevi.html', cases=cases)
 
+@app.route('/sluzbeni_psi', methods=['GET', 'POST'])
+def sluzbeni_psi():
+    if request.method == 'POST':
+        id_trener = request.form['id_trener']
+        oznaka = request.form['oznaka']
+        godina_rodjenja = request.form['godina_rodjenja']
+        status = "aktivan"
+        id_kaznjivo_djelo = request.form['id_kaznjivo_djelo']
+
+        cur = mysql.connection.cursor()
+        cur.callproc('Dodaj_Novog_Psa', [id_trener, oznaka, godina_rodjenja, status, id_kaznjivo_djelo])
+        mysql.connection.commit()
+        cur.close()
+
+    cur = mysql.connection.cursor()
+    cur.execute('SELECT pregled_pasa.*, pas.status, pas.godina_rodjenja FROM pregled_pasa JOIN pas ON pas.id=pregled_pasa.pas_id')
+    pregled_pasa = cur.fetchall()
+    cur.execute('SELECT * FROM najefikasniji_pas JOIN pas ON pas.id = najefikasniji_pas.pas_id')
+    najefikasniji_pas = cur.fetchall()
+    cur.close()
+
+
+    return render_template('sluzbeni_psi.html', pregled_pasa=pregled_pasa, najefikasniji_pas=najefikasniji_pas)
+
+@app.route('/change_status', methods=['POST'])
+def change_status():
+    new_status = request.form['status']
+    dog_id = request.form['dog_id']
+    cur = mysql.connection.cursor()
+    cur.execute('UPDATE pas SET status = %s WHERE id = %s', (new_status, dog_id))
+    mysql.connection.commit()
+    cur.close()
+    return redirect(url_for('sluzbeni_psi'))
+
+@app.route('/sluzbenici')
+def sluzbenici():
+    cur = mysql.connection.cursor()
+    cur.execute('''SELECT * FROM pogled_policijskih_sluzbenika''')
+    sluzbenici = cur.fetchall()
+    return render_template('sluzbenici.html', sluzbenici=sluzbenici)
+
 
 @app.route('/showtables')
 def show_tables():
-    print("About to execute SHOW TABLES")
     cur = mysql.connection.cursor()
     cur.execute("SHOW TABLES")
-    cur.execute("SELECT * FROM Slucaj")
     tables = [table[0] for table in cur.fetchall()]
     cur.close()
-    print("Executed SHOW TABLES")
-    print(tables)
-    return 'Tables printed in console.'
+    return '<br>'.join(f'{i+1}. {table}' for i, table in enumerate(tables))
 
 
 @app.route('/vozila')
@@ -132,13 +155,7 @@ def zaposlenici_podrucje(podrucje_uprave):
 @app.route('/odjeli')
 def odjeli():
     cur = mysql.connection.cursor()
-    query = """
-        SELECT O.naziv AS naziv_odjela, COUNT(Z.id) AS broj_zaposlenika
-        FROM Zaposlenik Z
-        JOIN Odjeli O ON Z.id_odjel = O.id
-        GROUP BY O.id, O.naziv
-    """
-    cur.execute(query)
+    cur.execute("SELECT * FROM Odjeli_broj_zaposlenika")
     result = cur.fetchall()
     cur.close()
     return render_template('odjeli.html', result=result)

@@ -118,7 +118,7 @@ CREATE TABLE Pas (
     id INTEGER AUTO_INCREMENT PRIMARY KEY,
     id_trener INTEGER, # to je osoba zadužena za rad s psom
     oznaka VARCHAR(255) UNIQUE, # pretpostavljan da je ovo unikatno za svakega psa; ima mi logike 
-    godina_rođenja INTEGER NOT NULL,
+    godina_rodjenja INTEGER NOT NULL,
     status VARCHAR(255),
     id_kaznjivo_djelo INTEGER,# dali je pas za drogu/ljude/oružje itd.	
     FOREIGN KEY (id_trener) REFERENCES Zaposlenik(id),
@@ -550,7 +550,7 @@ INSERT INTO Kaznjiva_djela(naziv, opis, predvidena_kazna, predvidena_novcana_kaz
 ('Nedozvoljeno snimanje ili prisluškivanje', 'Neovlašteno bilježenje razgovora ili prisluškivanje komunikacija bez pristanka svih uključenih strana.', NULL, 750.00); 
  
  -- Tablica Pas(11)(svaki cin osim voditelja moze biti trener)
- INSERT INTO Pas(id_trener, oznaka, godina_rođenja, status, id_kaznjivo_djelo) VALUES
+ INSERT INTO Pas(id_trener, oznaka, godina_rodjenja, status, id_kaznjivo_djelo) VALUES
 (1, 'K9-123', 2022, 'aktivan', 1),
 (2, 'K9-456', 2020, 'nije za teren', 1),
 (5, 'K9-789', 2014, 'umirovljen', 1),
@@ -937,7 +937,7 @@ SELECT
     O.Id AS zaposlenik_id,
     O.Ime_Prezime AS ime_prezime_osobe,
     O.datum_rodenja AS datum_rodenja_osobe,
-    DATEDIFF(CURRENT_DATE, Z.Datum_zaposlenja) AS Godine_Staza,
+    TIMESTAMPDIFF(YEAR, Z.datum_zaposlenja, CURRENT_DATE) AS Godine_Staza,
     CASE
         WHEN Z.datum_izlaska_iz_sluzbe IS NOT NULL AND Z.Datum_izlaska_iz_sluzbe <= CURRENT_DATE THEN 'Da'
         ELSE 'Ne'
@@ -1073,7 +1073,7 @@ JOIN
     Osoba O ON O.id = Z.id_osoba
 WHERE 
     S.Pocetak BETWEEN CURDATE() - INTERVAL 10000 DAY AND CURDATE(); # OVAJ INTERVAL MIJENJAMO PREMA POTREBI
-##############################################################################################################################################
+
 # 23) Napiši pogled koja će dohvaćati slučajeve koji sadrže određeno kazneno djelo i sortirati ih po vrijednosti zapljene silazno
 CREATE VIEW Slucajevi_po_kaznjivom_djelu AS
 SELECT
@@ -1122,6 +1122,28 @@ SELECT * FROM Podaci_o_slucajevima_zapljenama;
 -- DROP VIEW Slucajevi_u_posljednjih_n_dana;
 SELECT * FROM Slucajevi_u_posljednjih_n_dana;
 SELECT * FROM slucaj;
+
+# 25) Napiši pogled koji će ispisati zaposlenike koji su riješili najviše slučajeva
+        CREATE VIEW Zaposlenici_s_najvise_rijesenih_slucajeva AS
+        SELECT Z.id AS id_zaposlenika, O.ime_prezime AS ime_prezime_zaposlenika, COUNT(S.id) AS broj_slucajeva
+        FROM Zaposlenik Z
+        JOIN Osoba O ON Z.id_osoba= O.id
+        LEFT JOIN Slucaj S ON S.id_voditelj = Z.id
+        GROUP BY Z.id, o.ime_prezime
+        HAVING COUNT(S.id) =
+        (SELECT MAX(broj_slucajeva)
+            FROM (
+            SELECT COUNT(id) AS broj_slucajeva
+            FROM Slucaj 
+            GROUP BY id_voditelj
+        ) AS max_voditelj);
+
+# 26) Napiši pogled koji će ispisati sve odjele i broj zaposlenika na njima
+        CREATE VIEW Odjeli_broj_zaposlenika AS
+        SELECT O.naziv AS naziv_odjela, COUNT(Z.id) AS broj_zaposlenika
+        FROM Zaposlenik Z
+        JOIN Odjeli O ON Z.id_odjel = O.id
+        GROUP BY O.id, O.naziv;
 
 # TRIGERI
 #TRIGERI
@@ -1368,7 +1390,7 @@ END;
 //
 DELIMITER ;
 
-# 13) Ako postavimo psu drugu godinu rođenja i preko nje ispada da je stariji od 10 godina, onda ga časno umirovimo
+# 13) Ako postavimo psu drugu godinu rodjenja i preko nje ispada da je stariji od 10 godina, onda ga časno umirovimo
 DELIMITER //
 
 CREATE TRIGGER bu_pas
@@ -1376,8 +1398,8 @@ BEFORE UPDATE ON Pas
 FOR EACH ROW
 BEGIN
     DECLARE nova_dob INTEGER;
-    SET nova_dob = YEAR(NOW()) - NEW.godina_rođenja;
-    IF nova_dob >= 10 AND OLD.godina_rođenja <> NEW.godina_rođenja THEN
+    SET nova_dob = YEAR(NOW()) - NEW.godina_rodjenja;
+    IF nova_dob >= 10 AND OLD.godina_rodjenja <> NEW.godina_rodjenja THEN
         SET NEW.status = 'Časno umirovljen';
     END IF;
 END;
@@ -1401,7 +1423,7 @@ END;
 //
 DELIMITER ;
 
-# 15) Napiši triger koji će, u slučaju da je osoba mlađa od 18 godina (godina današnjeg datuma - godina rođenja daju broj manji od 18), pri dodavanju te osobe u slučaj dodati poseban stupac s napomenom: Počinitelj je maloljetan - slučaj nije otvoren za javnost
+# 15) Napiši triger koji će, u slučaju da je osoba mlađa od 18 godina (godina današnjeg datuma - godina rodjenja daju broj manji od 18), pri dodavanju te osobe u slučaj dodati poseban stupac s napomenom: Počinitelj je maloljetan - slučaj nije otvoren za javnost
 ALTER TABLE Slucaj
 ADD COLUMN Napomena VARCHAR(255);
 
@@ -1827,14 +1849,14 @@ DELIMITER //
 CREATE PROCEDURE Dodaj_Novog_Psa(
     IN p_id_trener INTEGER,
     IN p_oznaka VARCHAR(255),
-    IN p_godina_rođenja INTEGER,
+    IN p_godina_rodjenja INTEGER,
     IN p_status VARCHAR(255),
     IN p_id_kaznjivo_djelo INTEGER
 )
 BEGIN
     -- Unos novog psa
-    INSERT INTO Pas (id_trener, oznaka, godina_rođenja, status, id_kaznjivo_djelo)
-    VALUES (p_id_trener, p_oznaka, p_godina_rođenja, p_status, p_id_kaznjivo_djelo);
+    INSERT INTO Pas (id_trener, oznaka, godina_rodjenja, status, id_kaznjivo_djelo)
+    VALUES (p_id_trener, p_oznaka, p_godina_rodjenja, p_status, p_id_kaznjivo_djelo);
 END //
 
 DELIMITER ;
@@ -2556,7 +2578,7 @@ DETERMINISTIC
 BEGIN
     DECLARE osoba_info TEXT;
 
-    SELECT CONCAT('Ime i prezime: ', Ime_Prezime, '\nDatum rođenja: ', Datum_rodenja, '\nAdresa: ', Adresa, '\nEmail: ', Email)
+    SELECT CONCAT('Ime i prezime: ', Ime_Prezime, '\nDatum rodjenja: ', Datum_rodenja, '\nAdresa: ', Adresa, '\nEmail: ', Email)
     INTO osoba_info
     FROM Osoba
     WHERE Telefon = broj_telefona;
@@ -3376,4 +3398,9 @@ FLUSH PRIVILEGES;
 */
 
 
+SELECT pregled_pasa.*, pas.status, pas.godina_rodjenja FROM pregled_pasa JOIN pas ON pas.id=pregled_pasa.pas_id;
+SELECT * FROM pas;
 
+
+ INSERT INTO Pas(id_trener, oznaka, godina_rodjenja, status, id_kaznjivo_djelo) VALUES
+(25, 'K1-111', 2000, 'aktivan', 1);

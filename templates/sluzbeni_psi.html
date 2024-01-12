@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Policija | Službeni psi</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </head>
+  <body>
+    {% include 'navbar.html' %}
+    <div class="container">
+      <h1>Službeni psi</h1>
+
+      <h2>Najefikasniji pas</h2>
+      <div class="container py-4">
+        <div class="row">
+          {% for pas in najefikasniji_pas %}
+          <div class="col-sm-4 mb-4">
+            <div class="card h-100 shadow">
+              <div class="card-body">
+                <h5 class="card-title">{{ pas[1] }}</h5>
+                <p class="card-text">ID: {{ pas[0] }}</p>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <h2>Pregled pasa</h2>
+      <button
+        type="button"
+        class="btn btn-primary float-right mb-4"
+        data-toggle="modal"
+        data-target="#addDogModal"
+      >
+        Novi pas
+      </button>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Oznaka</th>
+            <th></th>
+            <th>Trener</th>
+            <th>Broj slučajeva</th>
+            <th>Riješeni slučajevi</th>
+            <th>Postotak riješenosti</th>
+            <th>Godina rođenja</th>
+            <th>Status</th>
+            <th>Izmjena statusa</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for pas in pregled_pasa %}
+          <tr>
+            <td>{{ pas[0] }}</td>
+            <td>{{ pas[1] }}</td>
+            <td>
+              {% if pas[6]=="aktivan" %}
+              <i
+                class="fas fa-paw blink"
+                data-toggle="tooltip"
+                title="Nagrađivani pas"
+              ></i>
+              {% endif %}
+            </td>
+            <td>{{ pas[2] }}</td>
+            <td>{{ pas[3] }}</td>
+            <td>{{ pas[4] }}</td>
+            <td>{{ pas[5] }}</td>
+            <td>{{ pas[7] }}</td>
+            <td>{{ pas[6] }}</td>
+            <td>
+              <button
+                type="button"
+                class="btn btn-primary"
+                data-toggle="modal"
+                data-target="#exampleModal{{ pas[0] }}"
+              >
+                Izmijeni
+              </button>
+            </td>
+          </tr>
+          <!-- Modal za izmjenu statusa -->
+          <div
+            class="modal fade"
+            id="exampleModal{{ pas[0] }}"
+            tabindex="-1"
+            aria-labelledby="exampleModalLabel"
+            aria-hidden="true"
+          >
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">
+                    Promjena statusa
+                  </h5>
+                  <button
+                    type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Close"
+                  >
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <!-- Your form to change the status goes here -->
+                  <form action="/change_status" method="post">
+                    <input type="hidden" name="dog_id" value="{{ pas[0] }}" />
+                    <div class="form-group">
+                      <label for="status">Novi status</label>
+                      <select class="form-control" id="status" name="status">
+                        <option value="umirovljen">umirovljen</option>
+                        <option value="nije za teren">nije za teren</option>
+                      </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary float-right">
+                      Spremi
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <!-- Add Dog Modal -->
+    <div
+      class="modal fade"
+      id="addDogModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="addDogModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addDogModalLabel">Novi pas</h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form method="POST" action="/sluzbeni_psi">
+              <div class="form-group">
+                <label for="id_trener">Oznaka trenera</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="id_trener"
+                  name="id_trener"
+                />
+              </div>
+              <div class="form-group">
+                <label for="oznaka">Oznaka</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="oznaka"
+                  name="oznaka"
+                />
+              </div>
+              <div class="form-group">
+                <label for="godina_rodjenja">Godina rođenja</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="godina_rodjenja"
+                  name="godina_rodjenja"
+                />
+              </div>
+              <div class="form-group">
+                <label for="id_kaznjivo_djelo">Oznaka kažnjivog dijela</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="id_kaznjivo_djelo"
+                  name="id_kaznjivo_djelo"
+                />
+              </div>
+              <button type="submit" class="btn btn-primary float-right">
+                Spremi
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <style>
+      @keyframes blink {
+        0%,
+        50% {
+          opacity: 1;
+          color: blue;
+        }
+        25%,
+        75% {
+          opacity: 0.5;
+        }
+        100% {
+          opacity: 1;
+          color: red;
+        }
+      }
+
+      .blink {
+        animation: blink 1.4s linear infinite;
+      }
+      .blink:hover {
+        cursor: pointer;
+      }
+    </style>
+    <script>
+      $(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+      });
+    </script>
+  </body>
+</html>
