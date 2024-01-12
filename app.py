@@ -12,7 +12,6 @@ app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = 'root'
 app.config['MYSQL_DB'] = 'Policija'
-# app.config["MYSQL_AUTOCOMMIT"] = True ili False ... odaberite po želji i prema tome onda koristite ili ne koristite mysql.connection.commit()
 
 mysql = MySQL(app)
 
@@ -136,21 +135,22 @@ def add_vozilo():
 
     return render_template('vozila.html')
 
-@app.route('/zaposlenici')
-def zaposlenici():
+@app.route('/podrucja_uprave')
+def podrucja_uprave():
     cur = mysql.connection.cursor()
     cur.execute("SELECT * FROM podrucje_uprave")
     podrucja = cur.fetchall()
     cur.close()
-    return render_template('zaposlenici.html', podrucja=podrucja)
+    return render_template('podrucja_uprave.html', podrucja=podrucja)
 
-@app.route('/zaposlenici/<podrucje_uprave>')
-def zaposlenici_podrucje(podrucje_uprave):
+@app.route('/podrucja_uprave/<podrucje_uprave>')
+def odjeli_podrucje(podrucje_uprave):
     cur = mysql.connection.cursor()
-    cur.execute("SELECT * FROM zaposlenik JOIN osoba ON osoba.id = zaposlenik.id_osoba JOIN zgrada ON zaposlenik.id_zgrada = zgrada.id JOIN mjesto ON mjesto.id = zgrada.id_mjesto WHERE id_podrucje_uprave = %s", [podrucje_uprave])
-    zaposlenici = cur.fetchall()
+    cur.execute("SELECT * FROM odjeli_podrucje_uprave WHERE podrucje_id = %s", [podrucje_uprave])
+    odjeli = cur.fetchall()
     cur.close()
-    return render_template('zaposlenici_podrucje.html', zaposlenici=zaposlenici)
+    print(odjeli)
+    return render_template('odjeli_podrucje.html', odjeli=odjeli)
 
 @app.route('/odjeli')
 def odjeli():

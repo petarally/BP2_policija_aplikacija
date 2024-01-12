@@ -23,10 +23,25 @@
         <div class="row">
           {% for pas in najefikasniji_pas %}
           <div class="col-sm-4 mb-4">
-            <div class="card h-100 shadow">
-              <div class="card-body">
-                <h5 class="card-title">{{ pas[1] }}</h5>
-                <p class="card-text">ID: {{ pas[0] }}</p>
+            <div class="card mb-3 shadow" style="max-width: 540px">
+              <div class="row no-gutters">
+                <div
+                  class="col-md-4 d-flex justify-content-center align-items-center"
+                >
+                  <i class="fas fa-certificate fa-5x colorize"></i>
+                </div>
+                <div class="col-md-8">
+                  <div class="card-body">
+                    <h5 class="card-title">{{ pas[1] }}</h5>
+                    <p class="card-text">Trener: {{ pas[2] }}</p>
+                    <p class="card-text">
+                      <small class="text-muted"
+                        >Broj slučajeva u kojima je sudjelovao: {{ pas[3]
+                        }}</small
+                      >
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -69,7 +84,7 @@
               <i
                 class="fas fa-paw blink"
                 data-toggle="tooltip"
-                title="Nagrađivani pas"
+                title="Aktivni pas"
               ></i>
               {% endif %}
             </td>
@@ -226,6 +241,9 @@
       }
       .blink:hover {
         cursor: pointer;
+      }
+      .colorize {
+        color: green;
       }
     </style>
     <script>

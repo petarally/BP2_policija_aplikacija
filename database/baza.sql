@@ -3404,3 +3404,13 @@ SELECT * FROM pas;
 
  INSERT INTO Pas(id_trener, oznaka, godina_rodjenja, status, id_kaznjivo_djelo) VALUES
 (25, 'K1-111', 2000, 'aktivan', 1);
+
+
+CREATE VIEW odjeli_podrucje_uprave AS
+SELECT podrucje_uprave.id AS podrucje_id, podrucje_uprave.naziv, mjesto.id AS mjesto_id, mjesto.naziv AS mjesto_naziv, zgrada.id AS zgrada_id, zgrada.adresa, zgrada.vrsta_zgrade
+FROM podrucje_uprave
+JOIN mjesto ON mjesto.id_podrucje_uprave = podrucje_uprave.id
+JOIN zgrada ON zgrada.id = mjesto.id;
+
+
+SELECT * FROM odjeli_podrucje_uprave;

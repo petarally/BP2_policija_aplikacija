@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Policija | Zaposlenici</title>
+    <title>Policija | Područja uprave</title>
     <link
       rel="stylesheet"
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
@@ -16,7 +16,7 @@
       <ul class="list-group">
         {% for podrucje in podrucja %}
         <a
-          href="{{ url_for('zaposlenici_podrucje', podrucje_uprave=podrucje[0]) }}"
+          href="{{ url_for('odjeli_podrucje', podrucje_uprave=podrucje[0]) }}"
           >{{ podrucje[1] }}</a
         >
         {% endfor %}

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Policija | Zaposlenici</title>
+    <title>Policija | Pronađite nas</title>
     <link
       rel="stylesheet"
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
@@ -12,21 +12,23 @@
   <body>
     {% include 'navbar.html' %}
     <div class="container-lg py-3">
-      <h1>Zaposlenici</h1>
+      <h1>Pronađite nas</h1>
       <table class="table table-striped table-hover">
         <thead>
           <tr>
-            <th>Ime i prezime</th>
+            <th>ID</th>
             <th>Mjesto</th>
             <th>Zgrada</th>
+            <th>Adresa</th>
           </tr>
         </thead>
         <tbody>
-          {% for zaposlenik in zaposlenici %}
+          {% for odjel in odjeli %}
           <tr>
-            <td>{{zaposlenik[9]}}</td>
-            <td>{{zaposlenik[21]}}</td>
-            <td>{{zaposlenik[19]}}</td>
+            <td>{{ odjel[0] }}</td>
+            <td>{{ odjel[3] }}</td>
+            <td>{{ odjel[6] }}</td>
+            <td>{{ odjel[5] }}</td>
           </tr>
           {% endfor %}
         </tbody>
