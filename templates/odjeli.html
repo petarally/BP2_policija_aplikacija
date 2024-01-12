@@ -16,12 +16,14 @@
       <div class="row">
         {% for row in result %}
         <div class="col-12">
-          <div class="card mb-3">
-            <div class="card-body">
-              <h5 class="card-title">{{ row[0] }}</h5>
-              <p class="card-text">Broj Zaposlenika: {{ row[1] }}</p>
+          <a href="/odjeli/{{ row[-1] }}/sluzbenici/{{row[0]}}">
+            <div class="card mb-3">
+              <div class="card-body">
+                <h5 class="card-title">{{ row[1] }}</h5>
+                <p class="card-text">{{ row[2] }}</p>
+              </div>
             </div>
-          </div>
+          </a>
         </div>
         {% endfor %}
       </div>

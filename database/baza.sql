@@ -64,12 +64,12 @@ CREATE TABLE Zaposlenik (
   id INT AUTO_INCREMENT PRIMARY KEY,
   datum_zaposlenja DATE NOT NULL,
   datum_izlaska_iz_sluzbe DATE, # ovo može biti NULL ako nije izašao iz službe
-  id_nadređeni INT,
+  id_nadredeni INT,
   id_radno_mjesto INT,
   id_odjel INT,
   id_zgrada INT,
   id_osoba INT,
-  FOREIGN KEY (id_nadređeni) REFERENCES Zaposlenik(id), 
+  FOREIGN KEY (id_nadredeni) REFERENCES Zaposlenik(id), 
   FOREIGN KEY (id_radno_mjesto) REFERENCES Radno_mjesto(id),
   FOREIGN KEY (id_odjel) REFERENCES Odjeli(id),
   FOREIGN KEY (id_zgrada) REFERENCES Zgrada(id), # ovo je tipa zatvor di se nalazi/postaja di dela itd.
@@ -447,7 +447,7 @@ INSERT INTO Osoba(Ime_Prezime, Datum_rodenja, Oib, Spol, Adresa, Telefon, Email)
 ('Fabijan Vilitić', STR_TO_DATE('05.05.1985.', '%d.%m.%Y.'), '59382565411', 'muški', 'Krešimirova 15b', '098 333 1334', 'fabijan4vilitic@gmail.com');
 
 -- Tablica Zaposlenik(7)
-INSERT INTO Zaposlenik(datum_zaposlenja, datum_izlaska_iz_sluzbe, id_nadređeni, id_radno_mjesto, id_odjel, id_zgrada, id_osoba) VALUES
+INSERT INTO Zaposlenik(datum_zaposlenja, datum_izlaska_iz_sluzbe, id_nadredeni, id_radno_mjesto, id_odjel, id_zgrada, id_osoba) VALUES
 -- voditelji policijskih postaja
 (STR_TO_DATE('21.11.1995.', '%d.%m.%Y.'), NULL, NULL, 5, 1, 1, 4),
 (STR_TO_DATE('05.10.2000.', '%d.%m.%Y.'), NULL, NULL, 5, 1, 36, 12),
@@ -1367,9 +1367,9 @@ CREATE TRIGGER bi_zaposlenik
 BEFORE INSERT ON Zaposlenik
 FOR EACH ROW
 BEGIN
-    IF NEW.id_nadređeni IS NOT NULL AND NEW.id_nadređeni = NEW.Id THEN
+    IF NEW.id_nadredeni IS NOT NULL AND NEW.id_nadredeni = NEW.Id THEN
         SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Nadređeni ne može biti ista osoba kao i podređeni.';
+        SET MESSAGE_TEXT = 'nadredeni ne može biti ista osoba kao i podređeni.';
     END IF;
 END;
 //
@@ -1796,7 +1796,7 @@ DELIMITER //
 
 CREATE PROCEDURE Dodaj_Novog_Zaposlenika(
     IN p_datum_zaposlenja DATETIME,
-    IN p_id_nadređeni INT,
+    IN p_id_nadredeni INT,
     IN p_id_radno_mjesto INT,
     IN p_id_odjel INT,
     IN p_id_zgrada INT,
@@ -1804,8 +1804,8 @@ CREATE PROCEDURE Dodaj_Novog_Zaposlenika(
     IN p_id_osoba INT
 )
 BEGIN
-    INSERT INTO Zaposlenik (datum_zaposlenja, id_nadređeni, id_radno_mjesto, id_odjel, id_zgrada, id_mjesto, id_osoba)
-    VALUES (p_datum_zaposlenja, p_id_nadređeni, p_id_radno_mjesto, p_id_odjel, p_id_zgrada, p_id_mjesto, p_id_osoba);
+    INSERT INTO Zaposlenik (datum_zaposlenja, id_nadredeni, id_radno_mjesto, id_odjel, id_zgrada, id_mjesto, id_osoba)
+    VALUES (p_datum_zaposlenja, p_id_nadredeni, p_id_radno_mjesto, p_id_odjel, p_id_zgrada, p_id_mjesto, p_id_osoba);
 END //
 
 DELIMITER ;
@@ -2263,7 +2263,7 @@ DELIMITER ;
 
 
 
-# Napiši proceduru koja će služiti za unaprijeđenje policijskih službenika na novo radno mjesto. Ako je novo radno mjesto jednako onom radnom mjestu osobe koja im je prije bila nadređena, postaviti će id_nadređeni na NULL
+# Napiši proceduru koja će služiti za unaprijeđenje policijskih službenika na novo radno mjesto. Ako je novo radno mjesto jednako onom radnom mjestu osobe koja im je prije bila nadređena, postaviti će id_nadredeni na NULL
 -- DROP PROCEDURE UnaprijediPolicijskogSluzbenika;
 DELIMITER //
 
@@ -2276,7 +2276,7 @@ BEGIN
     DECLARE stari_nadredeni_id INT;
     DECLARE radno_mjesto_nadredenog INT;
 
-    SELECT id_radno_mjesto, id_nadređeni INTO stari_radno_mjesto_id, stari_nadredeni_id
+    SELECT id_radno_mjesto, id_nadredeni INTO stari_radno_mjesto_id, stari_nadredeni_id
     FROM Zaposlenik
     WHERE id_osoba = p_id_osoba
     LIMIT 1;
@@ -2288,7 +2288,7 @@ BEGIN
 
     IF radno_mjesto_nadredenog = p_novo_radno_mjesto_id THEN
         UPDATE Zaposlenik
-        SET id_nadređeni = NULL
+        SET id_nadredeni = NULL
         WHERE id_osoba = p_id_osoba;
     ELSE
         UPDATE Zaposlenik
@@ -3416,17 +3416,20 @@ JOIN zgrada ON zgrada.id = mjesto.id;
 SELECT * FROM odjeli_podrucje_uprave;
 
 CREATE VIEW zaposlenik_u_zgradi AS
-SELECT zg.id AS zg_id, zg.adresa AS zg_adresa, zg.id_mjesto, zg.vrsta_zgrade, rm.id AS rm_id, rm.vrsta, rm.dodatne_informacije, o.id AS o_id, o.ime_prezime, o.datum_rodenja, o.oib, o.spol, o.adresa, o.telefon, o.email, za.id AS za_id, za.datum_zaposlenja, za.datum_izlaska_iz_sluzbe, za.id_nadređeni, za.id_radno_mjesto, za.id_odjel, za.id_zgrada, za.id_osoba
+SELECT zg.id AS zg_id, zg.adresa AS zg_adresa, zg.id_mjesto, zg.vrsta_zgrade, rm.id AS rm_id, rm.vrsta, rm.dodatne_informacije, o.id AS o_id, o.ime_prezime AS zaposlenik_ime_prezime, o.datum_rodenja, o.oib, o.spol, o.adresa, o.telefon, o.email, za.id AS za_id, za.datum_zaposlenja, za.datum_izlaska_iz_sluzbe, za.id_nadredeni, za.id_radno_mjesto, za.id_odjel, za.id_zgrada, za.id_osoba
 FROM zaposlenik za 
 INNER JOIN zgrada zg ON zg.id = za.id_zgrada 
 INNER JOIN osoba o on o.id = za.id_osoba 
 INNER JOIN radno_mjesto rm ON rm.id = za.id_radno_mjesto;
 
-CREATE VIEW prikaz_odjela AS
-SELECT * 
-FROM zaposlenik_u_zgradi zuz 
-INNER JOIN odjeli ON zuz.id_odjel = odjeli.id;
+-- DROP VIEW zaposlenik_u_zgradi;
+-- DROP VIEW prikaz_odjela;
 
-SELECT * 
-FROM prikaz_odjela 
-WHERE zg_id = 36 AND id_odjel = 2;
+
+CREATE VIEW prikaz_odjela AS
+SELECT zuz.*, odjeli.*, osoba.ime_prezime AS nadredeni_ime 
+FROM zaposlenik_u_zgradi zuz 
+INNER JOIN odjeli ON zuz.id_odjel = odjeli.id
+INNER JOIN osoba ON osoba.id = id_nadredeni;
+
+SELECT * FROM prikaz_odjela WHERE zg_id = 36;

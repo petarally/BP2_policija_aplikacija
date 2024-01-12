@@ -84,11 +84,12 @@ def change_status():
     cur.close()
     return redirect(url_for('sluzbeni_psi'))
 
-@app.route('/sluzbenici')
-def sluzbenici():
+@app.route('/odjeli/<int:id_grad>/sluzbenici/<int:id_sluzbenici>')
+def sluzbenici(id_grad, id_sluzbenici):
     cur = mysql.connection.cursor()
-    cur.execute('''SELECT * FROM pogled_policijskih_sluzbenika''')
+    cur.execute('SELECT * FROM prikaz_odjela WHERE zg_id=%s AND id_odjel=%s', [id_grad, id_sluzbenici])
     sluzbenici = cur.fetchall()
+    cur.close()
     return render_template('sluzbenici.html', sluzbenici=sluzbenici)
 
 
@@ -162,12 +163,13 @@ def odjeli_podrucje(podrucje_uprave):
     cur.close()
     return render_template('odjeli_podrucje.html', odjeli=odjeli)
 
-@app.route('/odjeli')
-def odjeli():
+@app.route('/odjeli/<int:id_odjel>')
+def odjeli(id_odjel):
     cur = mysql.connection.cursor()
-    cur.execute("SELECT * FROM Odjeli_broj_zaposlenika")
+    cur.execute("SELECT DISTINCT id_odjel, naziv, opis, zg_id FROM prikaz_odjela WHERE zg_id = %s", [id_odjel])
     result = cur.fetchall()
     cur.close()
+    print(result)
     return render_template('odjeli.html', result=result)
 
 if __name__ == '__main__':

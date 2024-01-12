@@ -16,21 +16,36 @@
       <table class="table table-striped">
         <thead>
           <tr>
-            <th>Zaposlenik ID</th>
             <th>Ime i prezime</th>
+            <th>Služba</th>
             <th>Datum rođenja</th>
-            <th>Godine staža</th>
-            <th>Umirovljen</th>
+            <th>OIB</th>
+            <th>Spol</th>
+            <th>Adresa</th>
+            <th>Telefon</th>
+            <th>Email</th>
+            <th>Datum zaposlenja</th>
+            <th>Datum izlaska iz službe</th>
+            <th>Nadređeni</th>
           </tr>
         </thead>
         <tbody>
           {% for sluzbenik in sluzbenici %}
           <tr>
-            <td>{{ sluzbenik[0] }}</td>
-            <td>{{ sluzbenik[1] }}</td>
-            <td>{{ sluzbenik[2].strftime('%d.%m.%Y') }}</td>
-            <td>{{ sluzbenik[3] }}</td>
-            <td>{{ sluzbenik[4] }}</td>
+            <td>{{ sluzbenik[8] }}</td>
+            <td>{{ sluzbenik[5] }}</td>
+            <td>{{ sluzbenik[9].strftime('%d.%m.%Y') }}</td>
+            <td>{{ sluzbenik[10] }}</td>
+            <td>{{ sluzbenik[11] }}</td>
+            <td>{{ sluzbenik[12] }}</td>
+            <td>{{ sluzbenik[13] }}</td>
+            <td>{{ sluzbenik[14] }}</td>
+            <td>{{ sluzbenik[16].strftime('%d.%m.%Y') }}</td>
+            <td>
+              {{ sluzbenik[17].strftime('%d.%m.%Y') if sluzbenik[17] != None
+              else 'None' }}
+            </td>
+            <td>{{ sluzbenik[-1] if sluzbenik[-1] != None else 'None' }}</td>
           </tr>
           {% endfor %}
         </tbody>
