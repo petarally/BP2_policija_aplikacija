@@ -45,6 +45,14 @@
           </div>
         </div>
       </div>
+      <button
+        type="button"
+        class="btn btn-primary float-right"
+        data-toggle="modal"
+        data-target="#voziloModal"
+      >
+        Novo vozilo
+      </button>
       <div class="container mt-5">
         <table class="table table-striped table-hover table-bordered">
           <thead class="thead-dark">
@@ -75,5 +83,92 @@
         </table>
       </div>
     </div>
+    <div
+      class="modal fade"
+      id="voziloModal"
+      tabindex="-1"
+      aria-labelledby="voziloModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-body">
+            <form id="voziloForm">
+              <div class="mb-3">
+                <label for="marka" class="form-label">Marka</label>
+                <input type="text" class="form-control" id="marka" />
+              </div>
+              <div class="mb-3">
+                <label for="model" class="form-label">Model</label>
+                <input type="text" class="form-control" id="model" />
+              </div>
+              <div class="mb-3">
+                <label for="registracija" class="form-label"
+                  >Registracija</label
+                >
+                <input type="text" class="form-control" id="Addregistracija" />
+              </div>
+              <div class="mb-3">
+                <label for="godina_proizvodnje" class="form-label"
+                  >Godina proizvodnje</label
+                >
+                <input
+                  type="number"
+                  class="form-control"
+                  id="godina_proizvodnje"
+                />
+              </div>
+              <div class="mb-3">
+                <label for="sluzbeno_vozilo" class="form-label"
+                  >Službeno vozilo</label
+                >
+                <select class="form-control" id="sluzbeno_vozilo">
+                  <option value="1">Da</option>
+                  <option value="0">Ne</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="id_vlasnik" class="form-label">ID vlasnika</label>
+                <input type="number" class="form-control" id="id_vlasnik" />
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id="saveButton">
+              Save changes
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </body>
+  <script>
+    document
+      .getElementById("saveButton")
+      .addEventListener("click", function () {
+        var marka = document.getElementById("marka").value;
+        var model = document.getElementById("model").value;
+        var registracija = document.getElementById("Addregistracija").value;
+        var godina_proizvodnje =
+          document.getElementById("godina_proizvodnje").value;
+        var sluzbeno_vozilo = document.getElementById("sluzbeno_vozilo").value;
+        var id_vlasnik = document.getElementById("id_vlasnik").value;
+
+        fetch("/add_vozilo", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body: `marka=${marka}&model=${model}&registracija=${registracija}&godina_proizvodnje=${godina_proizvodnje}&sluzbeno_vozilo=${sluzbeno_vozilo}&id_vlasnik=${id_vlasnik}`,
+        })
+          .then((response) => {
+            if (response.ok) {
+              alert("Vozilo je uspješno dodano");
+            } else {
+              alert("Pogreška pri dodavanju vozila");
+            }
+          })
+          .catch((error) => console.error("Error:", error));
+      });
+  </script>
 </html>

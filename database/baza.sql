@@ -1970,24 +1970,9 @@ CREATE PROCEDURE Dodaj_Novo_Vozilo(
     IN p_id_vlasnik INT
 )
 BEGIN
-    # Dodamo stupac napomena ako već ne postoji (ovo naknadno prepravit preko alter table, pa izbacit od tu)
-    IF NOT EXISTS (
-        SELECT * 
-        FROM INFORMATION_SCHEMA.COLUMNS 
-        WHERE TABLE_NAME = 'Vozilo' AND COLUMN_NAME = 'napomena'
-    ) THEN
-        ALTER TABLE Vozilo ADD COLUMN napomena VARCHAR(255);
-    END IF;
-    
-    # Postavimo napomenu na 'Vlasnik MUP' ako je vozilo službeno
-    IF p_sluzbeno_vozilo = 1 THEN
-        SET @napomena = 'Vlasnik MUP';
-    ELSE
-        SET @napomena = NULL;  # Ako nije službeno, ne treba nam neka posebna napomena
-    END IF;
 
-    INSERT INTO Vozilo (marka, model, registracija, godina_proizvodnje, id_vlasnik, napomena)
-    VALUES (p_marka, p_model, p_registracija, p_godina_proizvodnje, p_id_vlasnik, @napomena);
+    INSERT INTO Vozilo (marka, model, registracija, godina_proizvodnje, sluzbeno_vozilo ,id_vlasnik)
+    VALUES (p_marka, p_model, p_registracija, p_godina_proizvodnje, p_sluzbeno_vozilo, p_id_vlasnik);
 END //
 
 DELIMITER ;

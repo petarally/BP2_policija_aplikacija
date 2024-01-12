@@ -92,8 +92,26 @@ def vehicles():
     cur = mysql.connection.cursor()
     cur.execute(query, params)
     vehicles = cur.fetchall()
+    print(vehicles)
     cur.close()
     return render_template('vozila.html', vehicles=vehicles)
+
+
+@app.route('/add_vozilo', methods=['POST'])
+def add_vozilo():
+    marka = request.form.get('marka')
+    model = request.form.get('model')
+    registracija = request.form.get('registracija')
+    godina_proizvodnje = request.form.get('godina_proizvodnje')
+    sluzbeno_vozilo = int(request.form.get('sluzbeno_vozilo'))
+    id_vlasnik = request.form.get('id_vlasnik')
+
+    cur = mysql.connection.cursor()
+    cur.callproc('Dodaj_Novo_Vozilo', [marka, model, registracija, godina_proizvodnje, sluzbeno_vozilo, id_vlasnik])
+    mysql.connection.commit()
+    cur.close()
+
+    return render_template('vozila.html')
 
 @app.route('/zaposlenici')
 def zaposlenici():
