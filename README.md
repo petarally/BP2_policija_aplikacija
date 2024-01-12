@@ -1,6 +1,6 @@
 # Policija
 
-Policija is a web application for managing vehicle registrations.
+Policija je web aplikacija razvijena kao dio projekta za kolegij Baze podataka 2 na Fakultetu informatike u Puli.
 
 ## Installation
 
@@ -33,7 +33,7 @@ Follow these steps to install and run the Policija app locally:
 
 4. Run the application:
     ```bash
-    flask run
+python app.py
     ```
 
-Now, you should be able to see the application running at `http://127.0.0.1:5000/` in your web browser.
+Now, you should be able to see the application running at `http://127.0.0.1:8000/` in your web browser.
