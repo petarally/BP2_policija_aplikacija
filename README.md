@@ -8,7 +8,7 @@ Follow these steps to install and run the Policija app locally:
 
 1. Clone the repository:
     ```bash
-    git clone https://github.com/yourusername/policija.git
+    git clone https://github.com/petarally/BP2_policija_aplikacija.git
     cd policija
     ```
 
