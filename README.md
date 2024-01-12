@@ -33,7 +33,7 @@ Follow these steps to install and run the Policija app locally:
 
 4. Run the application:
     ```bash
-python app.py
+    python app.py
     ```
 
 Now, you should be able to see the application running at `http://127.0.0.1:8000/` in your web browser.
