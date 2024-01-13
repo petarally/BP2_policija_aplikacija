@@ -4,38 +4,56 @@ Policija je web aplikacija razvijena kao dio projekta za kolegij Baze podataka 2
 
 ![alt text](https://github.com/petarally/BP2_policija_aplikacija/blob/master/naslovna.png?raw=true)
 
-## Installation
+## Instalacija
 
-Follow these steps to install and run the Policija app locally:
-
-1. Clone the repository:
+1. Kloniranje:
     ```bash
     git clone https://github.com/petarally/BP2_policija_aplikacija.git
     cd policija
     ```
 
-2. Create a virtual environment and activate it:
+2. Stvaranje i pokretanje virtual environmenta:
 
-    On Windows, run:
+    Windows:
     ```bash
     python -m venv venv
     .\venv\Scripts\activate
     ```
 
-    On Unix or MacOS, run:
+    Unix / MacOS:
     ```bash
     python3 -m venv venv
     source venv/bin/activate
     ```
 
-3. Install the requirements:
+3. Preuzimanje potrebnih biblioteka:
     ```bash
     pip install -r requirements.txt
     ```
 
-4. Run the application:
+4. Pokretanje aplikacije:
     ```bash
     python app.py
     ```
 
-Now, you should be able to see the application running at `http://127.0.0.1:8000/` in your web browser.
+Aplikacija se pokreće na `http://127.0.0.1:8000/`.
+
+## Funkcionalnosti
+U aplikaciji je moguće pogledati sve slučajeve:
+![alt text](https://github.com/petarally/BP2_policija_aplikacija/blob/master/slucajevi.png
+?raw=true)
+
+Dodati, umiroviti i pregledati sve službene pse:
+![alt text](https://github.com/petarally/BP2_policija_aplikacija/blob/master/sluzbeni_psi.png
+?raw=true)
+
+Pronaći sve zaposlenike u svakom od odjela u svakoj od zgrada iz odabranog područja uprave:
+![alt text](https://github.com/petarally/BP2_policija_aplikacija/blob/master/podrucja_uprave.png
+?raw=true)
+![alt text](https://github.com/petarally/BP2_policija_aplikacija/blob/master/zgrade.png
+?raw=true)
+![alt text](https://github.com/petarally/BP2_policija_aplikacija/blob/master/odjeli.png
+?raw=true)
+![alt text](https://github.com/petarally/BP2_policija_aplikacija/blob/master/sluzbenici.png
+?raw=true)
+
