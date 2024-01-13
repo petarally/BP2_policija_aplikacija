@@ -82,7 +82,6 @@
               </button>
             </td>
           </tr>
-          <!-- Modal za izmjenu statusa -->
           <div
             class="modal fade"
             id="exampleModal{{ pas[0] }}"
@@ -106,7 +105,6 @@
                   </button>
                 </div>
                 <div class="modal-body">
-                  <!-- Your form to change the status goes here -->
                   <form action="/change_status" method="post">
                     <input type="hidden" name="dog_id" value="{{ pas[0] }}" />
                     <div class="form-group">
@@ -128,7 +126,6 @@
         </tbody>
       </table>
     </div>
-    <!-- Add Dog Modal -->
     <div
       class="modal fade"
       id="addDogModal"
