@@ -41,21 +41,15 @@ Aplikacija se pokreće na `http://127.0.0.1:8000/`.
 ## Funkcionalnosti
 U aplikaciji je moguće pogledati sve slučajeve:
 
-![alt text](https://github.com/petarally/BP2_policija_aplikacija/blob/master/slucajevi.png
-?raw=true)
+![alt text](https://github.com/petarally/BP2_policija_aplikacija/blob/master/slucajevi.png?raw=true)
 
 Dodati, umiroviti i pregledati sve službene pse:
 
-![alt text](https://github.com/petarally/BP2_policija_aplikacija/blob/master/sluzbeni_psi.png
-?raw=true)
+![alt text](https://github.com/petarally/BP2_policija_aplikacija/blob/master/sluzbeni_psi.png?raw=true)
 
 Pronaći sve zaposlenike u svakom od odjela u svakoj od zgrada iz odabranog područja uprave:
-![alt text](https://github.com/petarally/BP2_policija_aplikacija/blob/master/podrucja_uprave.png
-?raw=true)
-![alt text](https://github.com/petarally/BP2_policija_aplikacija/blob/master/zgrade.png
-?raw=true)
-![alt text](https://github.com/petarally/BP2_policija_aplikacija/blob/master/odjeli.png
-?raw=true)
-![alt text](https://github.com/petarally/BP2_policija_aplikacija/blob/master/sluzbenici.png
-?raw=true)
+![alt text](https://github.com/petarally/BP2_policija_aplikacija/blob/master/podrucja_uprave.png?raw=true)
+![alt text](https://github.com/petarally/BP2_policija_aplikacija/blob/master/zgrade.png?raw=true)
+![alt text](https://github.com/petarally/BP2_policija_aplikacija/blob/master/odjeli.png?raw=true)
+![alt text](https://github.com/petarally/BP2_policija_aplikacija/blob/master/sluzbenici.png?raw=true)
 
