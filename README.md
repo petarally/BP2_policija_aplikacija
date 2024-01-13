@@ -2,6 +2,8 @@
 
 Policija je web aplikacija razvijena kao dio projekta za kolegij Baze podataka 2 na Fakultetu informatike u Puli.
 
+![alt text](https://github.com/petarally/BP2_policija_aplikacija/blob/master/naslovna.png?raw=true)
+
 ## Installation
 
 Follow these steps to install and run the Policija app locally:
