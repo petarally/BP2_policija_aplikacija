@@ -40,10 +40,12 @@ Aplikacija se pokreće na `http://127.0.0.1:8000/`.
 
 ## Funkcionalnosti
 U aplikaciji je moguće pogledati sve slučajeve:
+
 ![alt text](https://github.com/petarally/BP2_policija_aplikacija/blob/master/slucajevi.png
 ?raw=true)
 
 Dodati, umiroviti i pregledati sve službene pse:
+
 ![alt text](https://github.com/petarally/BP2_policija_aplikacija/blob/master/sluzbeni_psi.png
 ?raw=true)
 
