@@ -43,12 +43,14 @@ def index():
     return render_template('index.html', result=result, svjezi_slucajevi=svjezi_slucajevi, najefikasniji_pas=najefikasniji_pas)
 
 @app.route('/slucajevi')
-def cases():
+def slucajevi():
     cur = mysql.connection.cursor()
     cur.execute("SELECT * FROM Slucaj")
     cases = cur.fetchall()
     cur.close()
-    return render_template('slucajevi.html', cases=cases)
+    return render_template('slucajevi.html', slucajevi=cases)
+
+
 
 @app.route('/sluzbeni_psi', methods=['GET', 'POST'])
 def sluzbeni_psi():
@@ -58,20 +60,16 @@ def sluzbeni_psi():
         godina_rodjenja = request.form['godina_rodjenja']
         status = "aktivan"
         id_kaznjivo_djelo = request.form['id_kaznjivo_djelo']
-
         cur = mysql.connection.cursor()
         cur.callproc('Dodaj_Novog_Psa', [id_trener, oznaka, godina_rodjenja, status, id_kaznjivo_djelo])
         mysql.connection.commit()
         cur.close()
-
     cur = mysql.connection.cursor()
     cur.execute('SELECT pregled_pasa.*, pas.status, pas.godina_rodjenja FROM pregled_pasa JOIN pas ON pas.id=pregled_pasa.pas_id')
     pregled_pasa = cur.fetchall()
     cur.execute('SELECT * FROM najefikasniji_pas JOIN pas ON pas.id = najefikasniji_pas.pas_id')
     najefikasniji_pas = cur.fetchall()
     cur.close()
-
-
     return render_template('sluzbeni_psi.html', pregled_pasa=pregled_pasa, najefikasniji_pas=najefikasniji_pas)
 
 @app.route('/change_status', methods=['POST'])
@@ -103,10 +101,9 @@ def show_tables():
 
 
 @app.route('/vozila')
-def vehicles():
+def vozila():
     ime_prezime = request.args.get('ime_prezime', default="%", type=str)
     registracija = request.args.get('registracija', default="%", type=str)
-
     query = """
         SELECT Osoba.ime_prezime, Vozilo.*
         FROM Vozilo
@@ -114,7 +111,6 @@ def vehicles():
         WHERE 1
     """
     params = []
-
     if ime_prezime != "":
         query += " AND Osoba.ime_prezime LIKE %s"
         params.append(ime_prezime)
@@ -122,7 +118,6 @@ def vehicles():
     if registracija != "":
         query += " AND Vozilo.registracija LIKE %s"
         params.append(registracija)
-
     cur = mysql.connection.cursor()
     cur.execute(query, params)
     vehicles = cur.fetchall()

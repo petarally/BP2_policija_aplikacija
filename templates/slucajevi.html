@@ -13,27 +13,27 @@
     {% include 'navbar.html' %}
     <div class="container py-3">
       <h1>Svi slučajevi</h1>
-      {% if cases %}
+      {% if slucajevi %}
       <div class="row">
-        {% for case in cases %}
+        {% for slucaj in slucajevi %}
         <div class="col-12">
           <div class="card mb-3">
             <div class="card-body">
-              <h5 class="card-title">{{ case[1] }}</h5>
-              <p class="card-text">Opis: {{ case[2] }}</p>
+              <h5 class="card-title">{{ slucaj[1] }}</h5>
+              <p class="card-text">Opis: {{ slucaj[2] }}</p>
               <p class="card-text">
                 <small class="text-muted"
-                  >Prijavljeno: {{ case[3].strftime('%d.%m.%Y') if case[3] else
-                  'N/A' }}</small
+                  >Prijavljeno: {{ slucaj[3].strftime('%d.%m.%Y') if slucaj[3]
+                  else 'N/A' }}</small
                 >
               </p>
               <p class="card-text">
                 <small class="text-muted"
-                  >Završeno: {{ case[4].strftime('%d.%m.%Y') if case[4] else
+                  >Završeno: {{ slucaj[4].strftime('%d.%m.%Y') if slucaj[4] else
                   'N/A' }}</small
                 >
               </p>
-              <p class="card-text">Status: {{ case[5] }}</p>
+              <p class="card-text">Status: {{ slucaj[5] }}</p>
             </div>
           </div>
         </div>

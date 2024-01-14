@@ -1335,6 +1335,11 @@ CREATE TABLE Arhiva
 (id_slucaj INT, FOREIGN KEY (id_slucaj) REFERENCES Slucaj(id));
 
 ALTER TABLE Arhiva DROP FOREIGN KEY arhiva_ibfk_1;
+ALTER TABLE Evidencija_Dogadaja DROP FOREIGN KEY evidencija_dogadaja_ibfk_1;
+ALTER TABLE Evidencija_Dogadaja DROP FOREIGN KEY evidencija_dogadaja_ibfk_2;
+ALTER TABLE Izvjestaji DROP FOREIGN KEY izvjestaji_ibfk_2;
+ALTER TABLE kaznjiva_djela_u_slucaju DROP FOREIGN KEY kaznjiva_djela_u_slucaju_ibfk_2;
+ALTER TABLE sui_slucaj DROP FOREIGN KEY sui_slucaj_ibfk_2;
 
 DELIMITER //
 
@@ -1351,15 +1356,16 @@ BEGIN
     ELSEIF slucaj_status <> 'riješen' THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Slučaj nije riješen i ne može biti premješten u arhivu.';
     ELSE
-        # Premjesti slučaj iz Slucaj u Arhiva i obrišemo ga iz slucaj
-        INSERT INTO Arhiva (id_slucaj) VALUES (slucaj_id);
-        DELETE FROM Slucaj WHERE id = slucaj_id;
+        INSERT INTO Arhiva (id_slucaj) VALUES (p_slucaj_id);
+        DELETE FROM Slucaj WHERE id = p_slucaj_id;
     END IF;
 END;
-
 //
 
 DELIMITER ;
+
+CALL oznaci_slucaj_arhiva(1);
+SELECT * FROM arhiva;
 
 # 11)Provjera da osoba nije nadređena sama sebi
 DELIMITER //
